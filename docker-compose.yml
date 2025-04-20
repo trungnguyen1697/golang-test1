@@ -1,0 +1,30 @@
+version: "3.5"
+
+services:
+  api:
+    container_name: trungnt-api
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes: # needed for CompileDaemon to detect file changes
+      - ./:/app
+    depends_on:
+      - db
+    ports:
+      - 5000:5000
+
+  db:
+    container_name: trungnt-postgres
+    image: postgres:latest
+    #    command: ["postgres", "-c", "log_statement=all"]
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ecommerce
+    volumes:
+      - fibergbdata:/var/lib/postgresql/data
+
+volumes:
+  fibergbdata:

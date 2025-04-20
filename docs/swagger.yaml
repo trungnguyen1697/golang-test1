@@ -1,0 +1,1602 @@
+definitions:
+  controller.CatErrorResponse:
+    properties:
+      errors:
+        additionalProperties:
+          type: string
+        type: object
+      msg:
+        type: string
+    type: object
+  controller.CategoriesResponse:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/dto.Category'
+        type: array
+    type: object
+  controller.CategoryResponse:
+    properties:
+      category:
+        $ref: '#/definitions/dto.Category'
+    type: object
+  controller.ErrorResponse:
+    properties:
+      msg:
+        type: string
+    type: object
+  controller.ProductCountResponse:
+    properties:
+      product_count:
+        type: integer
+    type: object
+  controller.SuccessResponse:
+    properties:
+      msg:
+        type: string
+    type: object
+  controller.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      msg:
+        type: string
+    type: object
+  dto.Category:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      display_order:
+        type: integer
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      parent_id:
+        type: string
+      product_count:
+        type: integer
+      slug:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.Product:
+    properties:
+      attributes:
+        additionalProperties: {}
+        type: object
+      categories:
+        items:
+          $ref: '#/definitions/dto.Category'
+        type: array
+      cost_price:
+        type: number
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      sale_price:
+        type: number
+      sku:
+        type: string
+      status:
+        type: string
+      stock_quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  dto.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      role:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.WishlistItemRequest:
+    properties:
+      product_id:
+        example: 5c9f8f9e-7c1f-4b9c-8c1f-7c1f4b9c8c1f
+        type: string
+    type: object
+  model.Category:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      display_order:
+        type: integer
+      id:
+        type: string
+      is_active:
+        type: boolean
+      is_deleted:
+        type: boolean
+      name:
+        type: string
+      parent_id:
+        type: string
+      product_count:
+        type: integer
+      slug:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.CategoryInput:
+    properties:
+      description:
+        type: string
+      display_order:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      parent_id:
+        type: string
+    required:
+    - name
+    type: object
+  model.ChangePassword:
+    description: User password change data
+    properties:
+      confirm_password:
+        example: newpassword123
+        type: string
+      current_password:
+        example: oldpassword123
+        type: string
+      new_password:
+        example: newpassword123
+        minLength: 8
+        type: string
+    required:
+    - confirm_password
+    - current_password
+    - new_password
+    type: object
+  model.DashboardStats:
+    properties:
+      category_distribution:
+        additionalProperties:
+          type: integer
+        type: object
+      last_updated:
+        type: string
+      recent_reviews:
+        items:
+          $ref: '#/definitions/model.Review'
+        type: array
+      review_count:
+        type: integer
+      top_rated_products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+      wishlist_count:
+        type: integer
+    type: object
+  model.LoginUser:
+    description: User login credentials
+    properties:
+      password:
+        example: password123
+        type: string
+      username:
+        example: johndoe
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.Product:
+    properties:
+      attributes:
+        additionalProperties: {}
+        type: object
+      categories:
+        items:
+          $ref: '#/definitions/model.Category'
+        type: array
+      cost_price:
+        type: number
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      is_deleted:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      sale_price:
+        type: number
+      sku:
+        type: string
+      status:
+        type: string
+      stock_quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  model.ProductInput:
+    properties:
+      attributes:
+        additionalProperties: {}
+        type: object
+      category_ids:
+        items:
+          type: string
+        minItems: 1
+        type: array
+      cost_price:
+        type: number
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      sale_price:
+        type: number
+      sku:
+        type: string
+      status:
+        enum:
+        - active
+        - inactive
+        - out_of_stock
+        type: string
+      stock_quantity:
+        minimum: 0
+        type: integer
+    required:
+    - category_ids
+    - name
+    - price
+    - sku
+    - status
+    - stock_quantity
+    type: object
+  model.RegisterUser:
+    description: User registration data
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      password:
+        example: password123
+        minLength: 8
+        type: string
+      role:
+        enum:
+        - user
+        - admin
+        example: user
+        type: string
+      username:
+        example: johndoe
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - full_name
+    - password
+    - username
+    type: object
+  model.Review:
+    properties:
+      comment:
+        type: string
+      created_at:
+        type: string
+      helpful_votes:
+        type: integer
+      id:
+        type: string
+      is_deleted:
+        type: boolean
+      is_verified_purchase:
+        type: boolean
+      product_id:
+        type: string
+      product_name:
+        type: string
+      rating:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    type: object
+  model.ReviewInput:
+    properties:
+      comment:
+        type: string
+      product_id:
+        type: string
+      rating:
+        maximum: 5
+        minimum: 1
+        type: integer
+      title:
+        type: string
+    required:
+    - comment
+    - product_id
+    - rating
+    type: object
+  model.UpdateUser:
+    description: User registration data
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      role:
+        enum:
+        - user
+        - admin
+        example: user
+        type: string
+      username:
+        example: johndoe
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - full_name
+    - username
+    type: object
+  model.WishlistItem:
+    properties:
+      added_at:
+        type: string
+      product:
+        $ref: '#/definitions/model.Product'
+      product_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Fiber go web framework based REST API boilerplate
+  title: Fiber Go API
+  version: "1.0"
+paths:
+  /api/v1/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CategoriesResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      summary: get all categories
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: Create a new category.
+      parameters:
+      - description: Create new category
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.CategoryInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.CategoryResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create a new category
+      tags:
+      - Category
+  /api/v1/categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a category.
+      parameters:
+      - description: Category ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success message
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "409":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete a category
+      tags:
+      - Category
+    get:
+      consumes:
+      - application/json
+      description: Get a category by ID.
+      parameters:
+      - description: Category ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CategoryResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      summary: get a category by ID
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: Update a category.
+      parameters:
+      - description: Category ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update category
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.CategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CategoryResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: update a category
+      tags:
+      - Category
+  /api/v1/categories/{id}/product-count:
+    get:
+      consumes:
+      - application/json
+      description: Get the count of products in a category.
+      parameters:
+      - description: Category ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: product count
+          schema:
+            $ref: '#/definitions/controller.ProductCountResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      summary: get product count for a category
+      tags:
+      - Category
+  /api/v1/categories/slug/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get a category by slug.
+      parameters:
+      - description: Category Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CategoryResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.CatErrorResponse'
+      summary: get a category by slug
+      tags:
+      - Category
+  /api/v1/dashboard/stats:
+    get:
+      consumes:
+      - application/json
+      description: Get dashboard statistics for current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Dashboard statistics
+          schema:
+            $ref: '#/definitions/model.DashboardStats'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get user dashboard stats
+      tags:
+      - Dashboard
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return an access token.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: '#/definitions/controller.TokenResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: User login
+      tags:
+      - Auth
+  /api/v1/products:
+    get:
+      consumes:
+      - application/json
+      description: List all products with optional filtering and pagination.
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
+      - description: Search term for name, SKU or description
+        in: query
+        name: search
+        type: string
+      - description: Filter by category ID (UUID format)
+        in: query
+        name: category_id
+        type: string
+      - description: Filter by status (active, inactive, out_of_stock)
+        in: query
+        name: status
+        type: string
+      - description: Filter by minimum price
+        in: query
+        name: min_price
+        type: number
+      - description: Filter by maximum price
+        in: query
+        name: max_price
+        type: number
+      - description: Filter by minimum stock quantity
+        in: query
+        name: min_stock
+        type: integer
+      - description: Filter by maximum stock quantity
+        in: query
+        name: max_stock
+        type: integer
+      - description: Filter by creation date (RFC3339 format)
+        in: query
+        name: created_after
+        type: string
+      - description: Filter by creation date (RFC3339 format)
+        in: query
+        name: created_before
+        type: string
+      - description: Sort field (name, price, created_at, stock_quantity)
+        in: query
+        name: sort_by
+        type: string
+      - description: Sort order (asc, desc)
+        in: query
+        name: sort_order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.Product'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: list products
+      tags:
+      - Product
+    post:
+      consumes:
+      - application/json
+      description: Create a new product.
+      parameters:
+      - description: Create new product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/model.ProductInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Product'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create a new product
+      tags:
+      - Product
+  /api/v1/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product.
+      parameters:
+      - description: Product ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema: {}
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete a product
+      tags:
+      - Product
+    get:
+      consumes:
+      - application/json
+      description: Get product details by ID.
+      parameters:
+      - description: Product ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Product'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: get a product
+      tags:
+      - Product
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product.
+      parameters:
+      - description: Product ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/model.ProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: '#/definitions/dto.Product'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: update a product
+      tags:
+      - Product
+  /api/v1/products/{id}/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories of a product.
+      parameters:
+      - description: Product ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.Category'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: get product categories
+      tags:
+      - Product
+  /api/v1/products/{product_id}/reviews:
+    get:
+      consumes:
+      - application/json
+      description: Get all reviews for a specific product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product reviews
+          schema:
+            items:
+              $ref: '#/definitions/model.Review'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: get product reviews
+      tags:
+      - Review
+  /api/v1/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user.
+      parameters:
+      - description: Create new user
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: '#/definitions/dto.User'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "409":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: create a new user
+      tags:
+      - User
+  /api/v1/reviews:
+    get:
+      consumes:
+      - application/json
+      description: Get all reviews with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reviews list
+          schema:
+            items:
+              $ref: '#/definitions/model.Review'
+            type: array
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: list all reviews
+      tags:
+      - Review
+    post:
+      consumes:
+      - application/json
+      description: Add a new review for a product
+      parameters:
+      - description: Review details
+        in: body
+        name: reviewInput
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReviewInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/model.Review'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create product review
+      tags:
+      - Review
+  /api/v1/reviews/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a review
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema: {}
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete review
+      tags:
+      - Review
+    get:
+      consumes:
+      - application/json
+      description: Get a review by its ID
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Review details
+          schema:
+            $ref: '#/definitions/model.Review'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get review by ID
+      tags:
+      - Review
+    put:
+      consumes:
+      - application/json
+      description: Update an existing review
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated review details
+        in: body
+        name: reviewUpdate
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReviewInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated review
+          schema:
+            $ref: '#/definitions/model.Review'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: update review
+      tags:
+      - Review
+  /api/v1/reviews/my-reviews:
+    get:
+      consumes:
+      - application/json
+      description: Get all reviews written by the current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User reviews
+          schema:
+            items:
+              $ref: '#/definitions/model.Review'
+            type: array
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get user reviews
+      tags:
+      - Review
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all exists user.
+      parameters:
+      - description: Page no
+        in: query
+        name: page
+        type: integer
+      - description: records per page
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.User'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get all exists user
+      tags:
+      - User
+  /api/v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema: {}
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: delete a user
+      tags:
+      - User
+    get:
+      consumes:
+      - application/json
+      description: a user.
+      parameters:
+      - description: User ID (UUID format)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.User'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get a user
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: first_name, last_name, is_active, is_admin only
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update a user
+        in: body
+        name: updateuser
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.User'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: update a user
+      tags:
+      - User
+  /api/v1/users/{id}/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Change user password with verification of current password
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Password change data
+        in: body
+        name: changePassword
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema: {}
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: change user password
+      tags:
+      - User
+  /api/v1/wishlist:
+    get:
+      consumes:
+      - application/json
+      description: Get all items in the user's wishlist
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Wishlist items
+          schema:
+            items:
+              $ref: '#/definitions/model.WishlistItem'
+            type: array
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: get user wishlist
+      tags:
+      - Wishlist
+    post:
+      consumes:
+      - application/json
+      description: Add a product to the user's wishlist
+      parameters:
+      - description: Product ID to add
+        in: body
+        name: wishlistItem
+        required: true
+        schema:
+          $ref: '#/definitions/dto.WishlistItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema: {}
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: add product to wishlist
+      tags:
+      - Wishlist
+  /api/v1/wishlist/{product_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a product from the user's wishlist
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema: {}
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: remove product from wishlist
+      tags:
+      - Wishlist
+  /api/v1/wishlist/check/{product_id}:
+    get:
+      consumes:
+      - application/json
+      description: Check if a product is in the user's wishlist
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Result with in_wishlist field
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: check wishlist item
+      tags:
+      - Wishlist
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
