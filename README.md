@@ -109,6 +109,7 @@ ecommerce-go/
    make run
    ```
    
+   
 Common HTTP status codes:
 - `200 OK`: Request successful
 - `201 Created`: Resource created successfully
@@ -117,6 +118,113 @@ Common HTTP status codes:
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Resource not found
 - `500 Internal Server Error`: Server-side error
+
+## Database Schema
+
+### Tables and Relationships
+
+#### Users
+- `id` (UUID, PK): Unique identifier
+- `username` (VARCHAR): Unique username for login
+- `email` (VARCHAR): Unique email address
+- `password_hash` (VARCHAR): Bcrypt hashed password
+- `full_name` (VARCHAR): User's full name
+- `role` (VARCHAR): User role (default: 'user')
+- `preferences` (JSONB): User preferences stored as JSON
+- `is_active` (BOOLEAN): Account status
+- `last_login_at` (TIMESTAMP): Last login timestamp
+- `created_at`, `updated_at` (TIMESTAMP): Record timestamps
+- `is_deleted` (BOOLEAN): Soft delete flag
+
+#### Products
+- `id` (UUID, PK): Unique identifier
+- `sku` (VARCHAR): Unique product code
+- `name` (VARCHAR): Product name
+- `description` (TEXT): Product description
+- `price` (DECIMAL): Regular price
+- `sale_price` (DECIMAL): Discounted price (if applicable)
+- `cost_price` (DECIMAL): Product cost
+- `stock_quantity` (INT): Available stock
+- `status` (VARCHAR): Product status (active, out_of_stock, etc.)
+- `attributes` (JSONB): Product attributes stored as JSON
+- `metadata` (JSONB): Additional metadata
+- `created_at`, `updated_at` (TIMESTAMP): Record timestamps
+- `is_deleted` (BOOLEAN): Soft delete flag
+
+#### Categories
+- `id` (UUID, PK): Unique identifier
+- `name` (VARCHAR): Category name
+- `slug` (VARCHAR): URL-friendly unique identifier
+- `description` (TEXT): Category description
+- `parent_id` (UUID, FK): Self-referencing foreign key for hierarchical categories
+- `is_active` (BOOLEAN): Category status
+- `display_order` (INT): Ordering for display
+- `created_at`, `updated_at` (TIMESTAMP): Record timestamps
+- `is_deleted` (BOOLEAN): Soft delete flag
+
+#### Product Categories (Junction)
+- `product_id` (UUID, FK): Reference to products
+- `category_id` (UUID, FK): Reference to categories
+- Combined primary key (product_id, category_id)
+
+#### Reviews
+- `id` (UUID, PK): Unique identifier
+- `product_id` (UUID, FK): Reference to product
+- `user_id` (UUID, FK): Reference to user
+- `rating` (SMALLINT): Rating (1-5)
+- `title` (VARCHAR): Review title
+- `comment` (TEXT): Review content
+- `is_verified_purchase` (BOOLEAN): Verified purchase flag
+- `helpful_votes` (INT): Number of helpful votes
+- `created_at`, `updated_at` (TIMESTAMP): Record timestamps
+- `is_deleted` (BOOLEAN): Soft delete flag
+
+#### Wishlist
+- `user_id` (UUID, FK): Reference to user
+- `product_id` (UUID, FK): Reference to product
+- `added_at` (TIMESTAMP): When item was added
+- Combined primary key (user_id, product_id)
+
+#### Inventory Movements
+- `id` (UUID, PK): Unique identifier
+- `product_id` (UUID, FK): Reference to product
+- `quantity` (INT): Quantity changed
+- `movement_type` (VARCHAR): Type of movement (purchase, sale, adjustment, return)
+- `reference_id` (UUID): Reference to related entity
+- `notes` (TEXT): Additional notes
+- `created_by` (UUID, FK): User who created the record
+- `created_at` (TIMESTAMP): Record timestamp
+
+### Entity Relationship Diagram (ERD)
+
+```
+Users 1──────────┐
+   │             │
+   │             ▼
+   │         Reviews
+   │             ▲
+   │             │
+Products ◄──────┘
+   ▲
+   │
+   ├────► Inventory Movements
+   │
+   │     Categories
+   │     ▲   │
+   │     │   │
+   └─────┴───┘
+      via
+ Product Categories
+```
+
+### Key Relationships
+
+- Many-to-Many: Products <-> Categories (via product_categories junction table)
+- One-to-Many: Users -> Reviews
+- One-to-Many: Products -> Reviews
+- Many-to-Many: Users <-> Products (via wishlist)
+- One-to-Many: Products -> Inventory Movements
+- Hierarchical: Categories -> Categories (self-referencing via parent_id)
 
 ## Security Considerations
 
@@ -127,6 +235,54 @@ Common HTTP status codes:
 - Prepared statements to prevent SQL injection
 - CORS protection for API endpoints
 
-## License
+## Future Improvements
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+The following technologies are planned for implementation to enhance system performance, search capabilities, and observability:
+
+### Redis for Caching
+
+Redis will be integrated to implement a robust caching strategy:
+
+- **API Response Caching**: Cache frequently requested data to reduce database load
+- **Session Management**: Store user sessions for faster authentication
+- **Rate Limiting**: Implement rate limiting for API endpoints
+- **Background Job Queue**: Manage asynchronous tasks efficiently
+- **Leaderboards/Counters**: Fast access to dynamic statistics
+
+Implementation plans include:
+- Cache invalidation strategies to ensure data consistency
+- Tiered caching approach for different types of data
+- Horizontal scaling with Redis Cluster for high availability
+
+### ElasticSearch for Full-Text Search
+
+ElasticSearch will be implemented to enhance search capabilities:
+
+- **Advanced Product Search**: Fuzzy matching, synonyms, and contextual search
+- **Faceted Navigation**: Dynamic filtering based on product attributes
+- **Search Analytics**: Track and optimize search patterns
+- **Multi-language Support**: Search across multiple languages
+- **Real-time Indexing**: Immediate indexing of new products
+
+Implementation plans include:
+- Custom analyzers for e-commerce specific terminology
+- Relevance tuning to improve search result quality
+- Integration with PostgreSQL via change data capture (CDC)
+
+### Prometheus & Grafana for Metrics
+
+Prometheus and Grafana will be implemented to provide comprehensive monitoring and metrics:
+
+- **System Metrics**: CPU, memory, disk usage, and network performance
+- **Application Metrics**: Request rates, response times, and error rates
+- **Business Metrics**: Order volume, revenue, and conversion rates
+- **Custom Dashboards**: Tailored visualizations for different stakeholders
+- **Alerting**: Proactive notifications for system anomalies
+
+Implementation plans include:
+- Custom instrumentation for critical business processes
+- SLO/SLI tracking for service reliability
+- Long-term metrics storage for trend analysis
+
+These technologies will progressively enhance the platform's performance, user experience, and operational visibility as the system scales.
+
